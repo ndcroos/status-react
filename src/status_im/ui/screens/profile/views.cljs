@@ -21,7 +21,7 @@
             [status-im.ui.screens.profile.styles :as styles]
             [status-im.utils.datetime :as time]
             [status-im.utils.utils :refer [hash-tag?]])
-  (:require-macros [status-im.utils.views :refer [defview]]))
+  (:require-macros [status-im.utils.views :refer [defview letsubs]]))
 
 (defn my-profile-toolbar []
   [toolbar/toolbar {:actions [(actions/opts [{:value #(dispatch [:my-profile/edit-profile])
@@ -47,7 +47,7 @@
    [my-profile-icon {:account contact
                      :edit?   false}]
    [react/view styles/profile-badge-name-container
-    [react/text {:style styles/profile-name-text
+    [react/text {:style           styles/profile-name-text
                  :number-of-lines 1}
      name]
     (when-not (nil? last-online)
@@ -103,7 +103,7 @@
 (defn profile-options [contact k text]
   (into []
         (concat [{:value (show-qr contact k)
-                  :text (label :t/show-qr)}]
+                  :text  (label :t/show-qr)}]
                 (when text
                   (share-options text)))))
 
@@ -128,7 +128,7 @@
 
 (defn tag-view [tag]
   [react/text {:style {:color color-blue}
-               :font :medium}
+               :font  :medium}
    (str tag " ")])
 
 (defn colorize-status-hashtags [status]
@@ -150,6 +150,14 @@
                         :empty-value?        phone-empty?
                         :accessibility-label :profile-phone-number}]))
 
+(defn network-settings []
+  [react/touchable-highlight
+   {:on-press #(dispatch [:navigate-to :network-settings])}
+   [react/view styles/network-settings
+    [react/text {:style styles/network-settings-text}
+     (label :t/network-settings)]
+    [vi/icon :icons/forward {:color :gray}]]])
+
 (defn profile-info [{:keys [whisper-identity status phone] :as contact}]
   [react/view
    [profile-info-address-item contact]
@@ -167,7 +175,9 @@
    [profile-info-phone-item
     phone
     [{:value #(dispatch [:my-profile/change-phone-number])
-      :text (label :t/edit)}]]])
+      :text  (label :t/edit)}]]
+   [info-item-separator]
+   [network-settings]])
 
 (defn profile-status [status & [edit?]]
   [react/view styles/profile-status-container

@@ -6,6 +6,7 @@
 (defn get-transaction-url [network account]
   (let [network (case network
                   "testnet" "ropsten"
+                  "testnet_rpc" "ropsten"
                   "mainnet" "api")]
     (str "https://" network ".etherscan.io/api?module=account&action=txlist&address=0x"
          account "&startblock=0&endblock=99999999&sort=desc&apikey=YourApiKeyToken?q=json")))
