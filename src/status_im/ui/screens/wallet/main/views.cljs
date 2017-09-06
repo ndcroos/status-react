@@ -68,9 +68,10 @@
      [react/text {:style wallet.styles/value-variation-title}
       (i18n/label :t/wallet-total-value)]
      [change-display change]]
-    [btn/buttons {:style wallet.styles/buttons :button-text-style wallet.styles/main-button-text}
-     [{:text     (i18n/label :t/wallet-send)
-       :on-press show-not-implemented! ;; #(rf/dispatch [:navigate-to :wallet-send-transaction])
+    [btn/buttons wallet.styles/buttons
+     [{:text      (i18n/label :t/wallet-send)
+       :on-press  #(do (rf/dispatch [:navigate-to :wallet-send-transaction])
+                       (rf/dispatch [:request-permissions [:camera]]))
        :disabled? (not config/wallet-wip-enabled?)}
       {:text     (i18n/label :t/wallet-request)
        :on-press #(rf/dispatch [:navigate-to :wallet-request-transaction])
